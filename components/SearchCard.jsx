@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search, ArrowRight, CircleCheck } from "lucide-react";
-import { DEMO_CODE } from "../lib/lotes";
+import { DEMO_CODE, loteHref } from "../lib/lotes";
 
 export default function SearchCard() {
   const [codigo, setCodigo] = useState("");
@@ -17,7 +17,7 @@ export default function SearchCard() {
     if (!/^[A-Za-z0-9][A-Za-z0-9-]{2,39}$/.test(c))
       return setErro("Use apenas letras, números e hífens (ex: LOTE-2026-X).");
     setErro("");
-    router.push(`/lote/${encodeURIComponent(c.toUpperCase())}`);
+    router.push(loteHref(c.toUpperCase()));
   }
 
   return (
@@ -65,4 +65,5 @@ export default function SearchCard() {
     </div>
   );
 }
+
 

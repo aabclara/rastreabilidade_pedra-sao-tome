@@ -1,6 +1,8 @@
 import { CircleCheck, ArrowDown, Mountain, Fingerprint, ShieldCheck, ScanLine } from "lucide-react";
 import SearchCard from "../components/SearchCard";
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 const faixa = [
   { icon: Mountain, titulo: "Origem identificada", texto: "Vínculo com a Região Pedra São Thomé." },
   { icon: Fingerprint, titulo: "Rastreio do fracionamento", texto: "Consulte o vínculo com o lote de origem." },
@@ -40,7 +42,7 @@ export default function Home() {
             className="relative flex aspect-[4/3] flex-col justify-between overflow-hidden rounded-[2rem] p-6 text-white sm:p-8 lg:aspect-[5/4]"
             style={{
               backgroundImage:
-                "linear-gradient(to top, rgba(20,22,18,.75), rgba(20,22,18,.05) 55%), url('/hero.jpg'), linear-gradient(135deg,#9aa38b,#6b7260 60%,#4a4f42)",
+                `linear-gradient(to top, rgba(20,22,18,.75), rgba(20,22,18,.05) 55%), url('${BASE}/hero.jpg'), linear-gradient(135deg,#9aa38b,#6b7260 60%,#4a4f42)`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
@@ -116,3 +118,4 @@ export default function Home() {
     </main>
   );
 }
+

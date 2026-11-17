@@ -1,10 +1,14 @@
+"use client";
+
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, ArrowRight, CircleCheck, MapPin, CalendarDays, Pickaxe, FileCheck, ClipboardCheck,
   Layers, Ruler, Sprout, Box, Tag, ShieldCheck, SearchX,
 } from "lucide-react";
-import { getLote } from "../../../lib/lotes";
-import CopyLinkButton from "../../../components/CopyLinkButton";
+import { getLote, loteHref } from "../../lib/lotes";
+import CopyLinkButton from "../../components/CopyLinkButton";
 
 function Label({ children }) {
   return <p className="mb-3 text-[11px] font-semibold uppercase tracking-label text-sage">{children}</p>;
@@ -37,9 +41,9 @@ function Spec({ icon: Icon, label, valor, detalhe }) {
   );
 }
 
-export default async function LotePage({ params }) {
-  const { codigo } = await params;
-  const lote = getLote(decodeURIComponent(codigo));
+function LoteView() {
+  const codigo = useSearchParams().get("codigo") || "";
+  const lote = getLote(codigo);
 
   if (!lote) {
     return (
@@ -47,7 +51,7 @@ export default async function LotePage({ params }) {
         <span className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-mist"><SearchX className="h-6 w-6" /></span>
         <h1 className="mb-3 text-3xl font-semibold tracking-tight">Lote não encontrado</h1>
         <p className="mb-8 text-sm text-sage">
-          Não localizamos o código <strong className="text-ink">{decodeURIComponent(codigo)}</strong>. Confira a etiqueta e tente novamente.
+          Não localizamos o código <strong className="text-ink">{codigo || "(vazio)"}</strong>. Confira a etiqueta e tente novamente.
         </p>
         <Link href="/" className="inline-flex items-center gap-2 rounded-xl bg-ink px-6 py-3 text-sm font-semibold text-white">
           <ArrowLeft className="h-4 w-4" /> Voltar para consulta
@@ -96,7 +100,7 @@ export default async function LotePage({ params }) {
           </div>
           <div className="flex items-center justify-between border-t border-white/10 pt-4 text-xs">
             <span className="text-white/60">Lote de origem</span>
-            <Link href={`/lote/${lote.original.codigo}`} className="font-mono font-semibold hover:underline">{lote.original.codigo}</Link>
+            <Link href={loteHref(lote.original.codigo)} className="font-mono font-semibold hover:underline">{lote.original.codigo}</Link>
           </div>
         </div>
       </section>
@@ -113,12 +117,12 @@ export default async function LotePage({ params }) {
         <div className="grid gap-4 md:grid-cols-3">
           <Step n={1} icon={Pickaxe} rotulo="Extração" titulo={lote.pedreira.nome} detalhe={lote.pedreira.detalhe} />
           <Step n={2} icon={FileCheck} rotulo="Lote original" titulo={lote.original.codigo} detalhe={lote.original.detalhe}
-            ativo={!fracionado} href={fracionado ? `/lote/${lote.original.codigo}` : undefined} />
+            ativo={!fracionado} href={fracionado ? loteHref(lote.original.codigo) : undefined} />
           {lote.fracionamento ? (
             <Step n={3} icon={ClipboardCheck} rotulo="Fracionamento" titulo={lote.fracionamento.codigo} detalhe={lote.fracionamento.detalhe} ativo />
           ) : (
             <Step n={3} icon={ClipboardCheck} rotulo="Fracionamento" titulo="Sem fracionamento" detalhe="Consulte o lote fracionado de demonstração"
-              href="/lote/LOTE-2026-X" />
+              href={loteHref("LOTE-2026-X")} />
           )}
         </div>
       </section>
@@ -160,3 +164,12 @@ export default async function LotePage({ params }) {
     </main>
   );
 }
+
+export default function LotePage() {
+  return (
+    <Suspense fallback={<p className="px-8 py-20 text-center text-sm text-sage">Carregando…</p>}>
+      <LoteView />
+    </Suspense>
+  );
+}
+

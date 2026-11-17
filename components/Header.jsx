@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mountain, ArrowUpRight } from "lucide-react";
-import { DEMO_CODE } from "../lib/lotes";
+import { DEMO_CODE, loteHref } from "../lib/lotes";
 
 export default function Header() {
   return (
@@ -19,7 +19,7 @@ export default function Header() {
         <Link href="/#sobre" className="hover:text-ink">Sobre a indicação</Link>
       </nav>
       <Link
-        href={`/lote/${DEMO_CODE}`}
+        href={loteHref(DEMO_CODE)}
         className="flex items-center gap-2 rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm font-semibold shadow-sm transition hover:bg-mist"
       >
         <span className="hidden sm:inline">Ver demonstração</span>
@@ -29,3 +29,4 @@ export default function Header() {
     </header>
   );
 }
+
